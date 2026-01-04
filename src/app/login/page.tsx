@@ -2,16 +2,53 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
+import { useRouter } from "next/navigation"
 
 export default function loginPage() {
   const cardRef = useRef(null);
   const buttonRef = useRef(null);
+  const router = useRouter();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
-    name: "",
     email: "",
     password: "",
   });
+
+  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await fetch("https://reqres.in/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'x-api-key': '<project_api_key>',
+        },
+        body: JSON.stringify({ email: form.email, password: form.password}),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Login failed");
+        return
+      }
+
+      console.log("Login success =>", data);
+      localStorage.setItem("token =>", data.token);
+      router.push("/home");
+    } catch (err) {
+      console.error("Network error =>", err);
+      setError("Network error, please try again")
+    }
+  }
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -63,15 +100,6 @@ export default function loginPage() {
 
     return () => ctx.revert();
   }, []);
-
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    console.log("Form submitted:", form);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
