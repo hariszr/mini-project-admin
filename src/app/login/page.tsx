@@ -122,7 +122,7 @@ export default function loginPage() {
               value={form.email}
               onChange={handleChange}
               placeholder="Email Address"
-              className="w-full px-4 py-3 rounded-lg bg-white/20 focus:bg-white/30 focus:ring-2 focus:ring-purple-300 text-white placeholder-gray-200 transition"
+              className="w-full px-4 py-3 rounded-lg bg-white/20 focus:bg-white/30 focus:ring-2 focus:ring-purple-300 text-white placeholder-gray-100 transition"
             />
             <i className="fas fa-envelope absolute right-3 top-3 text-white"></i>
           </div>
@@ -136,7 +136,7 @@ export default function loginPage() {
               value={form.password}
               onChange={handleChange}
               placeholder="Password"
-              className="w-full px-4 py-3 rounded-lg bg-white/20 focus:bg-white/30 focus:ring-2 focus:ring-purple-300 text-white placeholder-gray-200 transition"
+              className="w-full px-4 py-3 rounded-lg bg-white/20 focus:bg-white/30 focus:ring-2 focus:ring-purple-300 text-white placeholder-gray-100 transition"
             />
             <i className="fas fa-lock absolute right-3 top-3 text-white"></i>
           </div>
