@@ -5,9 +5,10 @@ export async function GET() {
     const pages = [1, 2, 3];
     const requests = pages.map((page) =>
     
-    fetch(`https://reqres.in/api/users?page=${page}`, {
+    fetch(`https://6958d24e6c3282d9f1d5e2c7.mockapi.io/articles`, {
         headers: {
-          "x-api-key": process.env.REQRES_API_KEY!,
+        //   "User-Agent": "Mozilla/5.0",
+        //   "Accept": "application/json",
         },
       }).then((res) => {
         if (!res.ok) {
