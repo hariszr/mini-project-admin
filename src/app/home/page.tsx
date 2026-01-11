@@ -30,22 +30,22 @@ const HomePage = () => {
   }, []);
 
   const getSafePosition = (rect: DOMRect) => {
-  const popupWidth = 300;
-  const margin = 12;
+    const popupWidth = 300;
+    const margin = 12;
 
-  let left = rect.right + 12;
+    let left = rect.right + 12;
 
-  if (left + popupWidth > window.innerWidth) {
-    left = rect.left - popupWidth - 12;
-  }
+    if (left + popupWidth > window.innerWidth) {
+      left = rect.left - popupWidth - 12;
+    }
 
-  if (left < margin) left = margin;
+    if (left < margin) left = margin;
 
-  return {
-    top: rect.top + window.scrollY,
-    left,
+    return {
+      top: rect.top + window.scrollY,
+      left,
+    };
   };
-};
 
   return (
     <div className="min-h-screen overflow-x-hidden flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
@@ -76,41 +76,58 @@ const HomePage = () => {
             </div>
             <div>
               <div className="flex">
-                <h6 className="text-slate-100 font-bold">{user.name}</h6>
+                <h6 className="text-slate-100 font-bold pr-1">
+                  {user.first_name}
+                </h6>
+                <h6 className="text-slate-100 font-bold">{user.last_name}</h6>
               </div>
               <p className="text-slate-200 text-sm">{user.email}</p>
             </div>
           </div>
         ))}
-        
       </div>
       {/* Floating */}
-        {selectedUser && (
-          <div className="w-full h-full fixed top-0 left-0 inset-0 bg-black/50 flex items-center justify-center">
-            <div
-              className="absolute bg-white rounded-2xl p-6 w-[300px] text-center shadow-xl"
+      {selectedUser && (
+        <div className="w-full h-full fixed top-0 left-0 inset-0 bg-black/50 flex items-center justify-center">
+          <div className="absolute bg-white rounded-2xl p-6 w-[300px] text-center shadow-xl">
+            <button
+              onClick={() => setSelectedUser(null)}
+              className="absolute top-2 right-3 text-gray-500 hover:text-black"
             >
-              <button
-                onClick={() => setSelectedUser(null)}
-                className="absolute top-2 right-3 text-gray-500 hover:text-black"
-              >
-                ✕
-              </button>
+              ✕
+            </button>
 
-              <img
-                src={selectedUser.avatar}
-                alt={selectedUser.first_name}
-                className="w-24 h-24 rounded-full mx-auto mb-4"
-              />
+            <img
+              src={selectedUser.avatar}
+              alt={selectedUser.first_name}
+              className="w-24 h-24 rounded-full mx-auto mb-4"
+            />
 
+            <div className="text-start">
               <h2 className="font-bold text-lg">
-                {selectedUser.name}
+                First Name: {selectedUser.first_name}
               </h2>
 
-              <p className="text-gray-600 text-sm mt-1">{selectedUser.email}</p>
+              <h2 className="font-bold text-lg">
+                Last Name: {selectedUser.last_name}
+              </h2>
+
+              <p className="text-gray-600 text-sm mt-1">
+                Followers: {selectedUser.followers}
+              </p>
+
+              <p className="text-gray-600 text-sm mt-1">
+                Address: {selectedUser.address}
+              </p>
+
+              <p className="text-gray-600 text-sm mt-1">
+                {" "}
+                Email: {selectedUser.email}
+              </p>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };
