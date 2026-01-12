@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Link from "next/link";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-export default function loginPage() {
+export default function LoginPage() {
   const cardRef = useRef(null);
   const buttonRef = useRef(null);
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function loginPage() {
     password: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleChange = (e: { target: { name: any; value: any } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -25,77 +26,89 @@ export default function loginPage() {
     e.preventDefault();
     setError("");
 
+    // Validasi manual
+    if (form.password !== "cityslicka") {
+      toast.error("Password atau Email Salah");
+      return;
+    }
+
     try {
       const response = await fetch("https://reqres.in/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'x-api-key': '<project_api_key>',
+          "x-api-key": "<project_api_key>",
         },
-        body: JSON.stringify({ email: form.email, password: form.password}),
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Login failed");
-        return
+        toast.error("Login Unsuccessfully, Email atau Password Salah");
+        return;
       }
 
-      console.log("Login success =>", data);
-      localStorage.setItem("token =>", data.token);
+      toast.success("Login Successfully, Welcome Back");
+      console.log("Login success", data);
+      localStorage.setItem("token", data.token);
       router.push("/home");
     } catch (err) {
-      console.error("Network error =>", err);
-      setError("Network error, please try again")
+      console.error("Network error", err);
+      toast.error("Network error, please try again");
     }
-  }
+  };
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-    gsap.fromTo(cardRef.current,{ opacity: 0, y: -60 }, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power3.inOut",
-      clearProps: "all",
-    });
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: -60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.inOut",
+          clearProps: "all",
+        }
+      );
 
-    gsap.fromTo(
-      ".input-field",
-      { opacity: 0, y: 24 },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.2,
+      gsap.fromTo(
+        ".input-field",
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.2,
+          duration: 0.8,
+          ease: "power2.out",
+          delay: 0.15,
+          clearProps: "all",
+        }
+      );
+
+      if (!buttonRef.current) return;
+
+      gsap.fromTo(
+        buttonRef.current,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          delay: 0.35,
+          clearProps: "all",
+        }
+      );
+
+      gsap.to(".fab", {
+        y: -10,
+        stagger: 0.1,
         duration: 0.8,
-        ease: "power2.out",
-        delay: 0.15,
-        clearProps: "all",
-      }
-    );
-
-    if (!buttonRef.current) return;
-
-  gsap.fromTo(
-    buttonRef.current,{ opacity: 0, y: 24 },
-    { opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        delay: 0.35, 
-      clearProps: "all",
-    }
-  );
-
-    gsap.to(".fab", {
-      y: -10,
-      stagger: 0.1,
-      duration: 0.8,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut",
-    });
-
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+      });
     }, cardRef);
 
     return () => ctx.revert();
@@ -112,7 +125,6 @@ export default function loginPage() {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-
           {/* Email */}
           <div className="input-field relative">
             <input
@@ -142,7 +154,7 @@ export default function loginPage() {
           </div>
 
           {/* Button */}
-            <button
+          <button
             ref={buttonRef}
             type="submit"
             className="relative z-10 w-full
@@ -153,13 +165,14 @@ export default function loginPage() {
           >
             Login <i className="fas fa-arrow-right ml-2"></i>
           </button>
-            
-          
         </form>
 
         <p className="text-white text-center mt-6">
           Don't have an account?{" "}
-          <Link href="/register" className="font-bold hover:underline transition">
+          <Link
+            href="/register"
+            className="font-bold hover:underline transition"
+          >
             Register
           </Link>
         </p>
